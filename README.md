@@ -1,3 +1,3 @@
-Yesserkey Dana /n
-Friday practice 01:00-03:00 pm /n
+Yesserkey Dana
+Friday practice 01:00-03:00 pm
 Кусманова Алима Талғатқызы
