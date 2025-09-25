@@ -7,46 +7,43 @@
 # Dictionary is a collection which is unordered, changeable and indexed. No duplicate members.
 
 # List
-# A list is a collection which is ordered and changeable.
 # In Python lists are written with square brackets.
 thislist = ["apple", "banana", "cherry"]
 print(thislist)
 
 # Access Items
-# You access the list items by referring to the index number:
 thislist = ["apple", "banana", "cherry"]
 print(thislist[1])
 
 # Change Item Value
-# To change the value of a specific item, refer to the index number:
 thislist = ["apple", "banana", "cherry"]
 thislist[1] = "blackcurrant"
 print(thislist)
 
 # Loop Through a List
-# You can loop through the list items by using a for loop:
 thislist = ["apple", "banana", "cherry"]
 for x in thislist:
     print(x)
 
 # List Length
-# To determine how many items a list have, use the len() method:
 thislist = ["apple", "banana", "cherry"]
 print(len(thislist))
 
 # Add Items
-# To add an item to the end of the list, use the append() method:
 thislist = ["apple", "banana", "cherry"]
 thislist.append("orange")
 print(thislist)
 
-# To add an item at the specified index, use the insert() method:
 thislist = ["apple", "banana", "cherry"]
 thislist.insert(1, "orange")
 print(thislist)
+# Join list
+list1 = ["a", "b", "c"]
+list2 = [1, 2, 3]
+list3 = list1 + list2
+print(list3)
 
 # Remove Item
-# There are several methods to remove items from a list:
 thislist = ["apple", "banana", "cherry"]
 thislist.remove("banana")
 print(thislist)
@@ -72,8 +69,6 @@ thislist.clear()
 print(thislist)
 
 # The list() Constructor
-# It is also possible to use the list() constructor to make a list.
-# note the double round-brackets
 thislist = list(("apple", "banana", "cherry"))
 print(thislist)
 
@@ -91,3 +86,32 @@ print(thislist)
 # remove()-Removes the item with the specified value
 # reverse()-Reverses the order of the list
 # sort()-Sorts the list
+
+# ex
+fruits = ["apple", "banana", "cherry"]
+print(fruits[1])
+
+fruits = ["apple", "banana", "cherry"]
+fruits[0] = "kiwi"
+print(fruits)
+
+fruits = ["apple", "banana", "cherry"]
+fruits.append("orange")
+print(fruits)
+
+fruits = ["apple", "banana", "cherry"]
+fruits.insert(1, "lemon")
+print(fruits)
+
+fruits = ["apple", "banana", "cherry"]
+fruits.remove("banana")
+print(fruits)
+
+fruits = ["apple", "banana", "cherry"]
+print(fruits[-1])
+
+fruits = ["apple", "banana", "cherry", "orange", "kiwi", "melon", "mango"]
+print(fruits[2:5])
+
+fruits = ["apple", "banana", "cherry"]
+print(len(fruits))
