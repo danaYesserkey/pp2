@@ -1,5 +1,5 @@
 def grams_to_ounces(grams):
-    return grams / 28.349523125
+    return grams
 
 def reverse_sentence(sentence):
     return ' '.join(sentence.split()[::-1])
