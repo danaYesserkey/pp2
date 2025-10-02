@@ -1,8 +1,8 @@
-if __name__ == "__main__":
-    from classes import Square, Rectangle, Point, Account, filter_primes
-    from functions import grams_to_ounces, reverse_sentence, filter_prime, has_33, spy_game
-    from movies import movies, good_movies, avg_imdb_category
+from classes import Square, Rectangle, Point, Account, filter_primes
+from functions import grams_to_ounces, reverse_sentence, filter_prime, has_33, spy_game
+from movies import movies, good_movies, avg_imdb_category
 
+if __name__ == "__main__":
     print("Square area:", Square(5).area())
     print("Rectangle area:", Rectangle(4, 6).area())
 
