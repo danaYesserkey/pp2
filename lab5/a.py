@@ -70,3 +70,15 @@ lines = content.split('\n')
 matches5_txt = [line for line in lines if re.match(pattern5, line.strip())]
 print("Matching lines in a.txt:", matches5_txt[:3])
 
+# 6. Write a Python program to replace all occurrences of space, comma, or dot with a colon.
+print("\n6. Replace space, comma, or dot with colon:")
+pattern6 = r'[ ,.]'
+sample6 = "Hello, world. Test case."
+result6 = re.sub(pattern6, ':', sample6)
+print("Sample:", sample6)
+print("Result:", result6)
+sample_line = "Натрия хлорид 0,9%, 200 мл, фл"
+result6_txt = re.sub(pattern6, ':', sample_line)
+print("Sample from a.txt:", sample_line)
+print("Result:", result6_txt)
+
