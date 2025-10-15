@@ -107,3 +107,12 @@ result8_txt = re.split(pattern8, sample8_txt)
 print("Sample from a.txt:", sample8_txt)
 print("Result:", result8_txt)
 
+# 9. Write a Python program to insert spaces between words starting with capital letters.
+print("\n9. Insert spaces between words starting with capital letters:")
+pattern9 = r'(?<!^)(?=[A-Z])'
+sample9 = "HelloWorld TestCaseExample"
+result9 = re.sub(pattern9, ' ', sample9)
+print("Sample:", sample9)
+print("Result:", result9)
+result9_txt = re.sub(pattern9, ' ', content[:200])  # First 200 chars
+print("Applied to start of a.txt:", result9_txt[:100])
