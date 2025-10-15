@@ -95,3 +95,15 @@ if snake_in_txt:
     result7_txt = [snake_to_camel(s) for s in snake_in_txt]
     print("Converted in a.txt:", result7_txt)
 
+# 8. Write a Python program to split a string at uppercase letters.
+print("\n8. Split string at uppercase letters:")
+pattern8 = r'(?=[A-Z])'
+sample8 = "HelloWorld TestCase"
+result8 = re.split(pattern8, sample8)
+print("Sample:", sample8)
+print("Result:", result8)
+sample8_txt = "BioWorld"
+result8_txt = re.split(pattern8, sample8_txt)
+print("Sample from a.txt:", sample8_txt)
+print("Result:", result8_txt)
+
