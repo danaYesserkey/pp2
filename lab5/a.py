@@ -28,3 +28,13 @@ print("Matches:", matches1)
 
 matches1_txt = re.findall(pattern1, content)
 print("In a.txt (first 5):", matches1_txt[:5])
+
+# 2. Write a Python program that matches a string that has an 'a' followed by one or more 'b''s.
+print("\n2. Match 'a' followed by two to three 'b's:")
+pattern2 = r'ab{2,3}'
+sample2 = "abb abbb abbbb a abc"
+matches2 = re.findall(pattern2, sample2)
+print("Sample:", sample2)
+print("Matches:", matches2)
+matches2_txt = re.findall(pattern2, content)
+print("In a.txt:", matches2_txt)
