@@ -82,3 +82,16 @@ result6_txt = re.sub(pattern6, ':', sample_line)
 print("Sample from a.txt:", sample_line)
 print("Result:", result6_txt)
 
+# 7. Write a python program to convert snake case string to camel case string.
+print("\n7. Convert snake case to camel case:")
+def snake_to_camel(s):
+    return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), s)
+sample7 = "hello_world test_case_example"
+result7 = snake_to_camel(sample7)
+print("Sample:", sample7)
+print("Result:", result7)
+snake_in_txt = re.findall(pattern3, content)
+if snake_in_txt:
+    result7_txt = [snake_to_camel(s) for s in snake_in_txt]
+    print("Converted in a.txt:", result7_txt)
+
