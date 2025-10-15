@@ -116,3 +116,17 @@ print("Sample:", sample9)
 print("Result:", result9)
 result9_txt = re.sub(pattern9, ' ', content[:200])  # First 200 chars
 print("Applied to start of a.txt:", result9_txt[:100])
+
+
+# 10. Write a Python program to convert a given camel case string to snake case.
+print("\n10. Convert camel case to snake case:")
+def camel_to_snake(s):
+    return re.sub(r'(?<!^)(?=[A-Z])', '_', s).lower()
+sample10 = "HelloWorld TestCaseExample"
+result10 = camel_to_snake(sample10)
+print("Sample:", sample10)
+print("Result:", result10)
+camel_in_txt = re.findall(r'\b[A-Z][a-z]+[A-Z][a-z]+\b', content)
+if camel_in_txt:
+    result10_txt = [camel_to_snake(s) for s in camel_in_txt]
+    print("Converted in a.txt:", result10_txt)
