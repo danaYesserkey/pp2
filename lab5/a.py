@@ -49,4 +49,13 @@ print("Matches:", matches3)
 matches3_txt = re.findall(pattern3, content)
 print("In a.txt:", matches3_txt)
 
+# 4. Write a Python program to find the sequences of one upper case letter followed by lower case letters.
+print("\n4. Find sequences of one uppercase letter followed by lowercase letters:")
+pattern4 = r'\b[A-Z][a-z]+\b'
+sample4 = "Hello world TestCase UPPER"
+matches4 = re.findall(pattern4, sample4)
+print("Sample:", sample4)
+print("Matches:", matches4)
+matches4_txt = re.findall(pattern4, content)
+print("In a.txt (first 10):", matches4_txt[:10])
 
