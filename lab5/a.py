@@ -59,3 +59,14 @@ print("Matches:", matches4)
 matches4_txt = re.findall(pattern4, content)
 print("In a.txt (first 10):", matches4_txt[:10])
 
+# 5. Write a Python program that matches a string that has an 'a' followed by anything, ending in 'b'.
+print("\n5. Match 'a' followed by anything, ending in 'b':")
+pattern5 = r'a.*b$'
+sample5 = "ab a123b axb a b abc"
+matches5 = [s for s in sample5.split() if re.match(pattern5, s)]
+print("Sample:", sample5)
+print("Matches:", matches5)
+lines = content.split('\n')
+matches5_txt = [line for line in lines if re.match(pattern5, line.strip())]
+print("Matching lines in a.txt:", matches5_txt[:3])
+
