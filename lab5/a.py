@@ -38,3 +38,15 @@ print("Sample:", sample2)
 print("Matches:", matches2)
 matches2_txt = re.findall(pattern2, content)
 print("In a.txt:", matches2_txt)
+
+# 3. Write a Python program to find sequences of lowercase letters joined with a underscore.
+print("\n3. Find sequences of lowercase letters joined with underscore:")
+pattern3 = r'\b[a-z]+_[a-z]+\b'
+sample3 = "hello_world test_case UPPER lower_upper"
+matches3 = re.findall(pattern3, sample3)
+print("Sample:", sample3)
+print("Matches:", matches3)
+matches3_txt = re.findall(pattern3, content)
+print("In a.txt:", matches3_txt)
+
+
