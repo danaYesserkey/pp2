@@ -1,4 +1,0 @@
-apple
-banana
-42
-True
