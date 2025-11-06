@@ -14,7 +14,7 @@ RED = (255, 0, 0)
 BALL_RADIUS = 25
 ball_x = SCREEN_WIDTH // 2
 ball_y = SCREEN_HEIGHT // 2
-MOVE_DISTANCE = 20
+MOVE_DISTANCE = 5
 
 clock = pygame.time.Clock()
 
