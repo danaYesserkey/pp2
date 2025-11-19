@@ -66,8 +66,13 @@ class Food:  # класс еды
         self.pos = (0, 0)  # позиция еды
         self.is_gold = False  # золотая ли еда
 
+        #еды и таймер исчезновения
+        self.value = 1   # сколько очков / роста дает еда
+        self.timer = 0   # время жизни еды в кадрах
+
     def respawn(self, snake, walls):  # появление еды
         self.is_gold = random.random() < GOLD_CHANCE  # шанс золотой еды
+
         free = [  # свободные клетки
             (x, y)
             for x in range(GRID_W)
@@ -75,6 +80,15 @@ class Food:  # класс еды
             if (x, y) not in snake and (x, y) not in walls  # не заняты
         ]
         self.pos = random.choice(free)  # новая позиция еды
+
+        # >>> добавлено Lab 9: назначаем вес еды
+        if self.is_gold:
+            self.value = random.randint(4, 6)     # золотая — тяжелее
+        else:
+            self.value = random.randint(1, 3)     # обычная — слабее
+
+        #таймер жизни еды (примерно 4 секунды)
+        self.timer = 60 * 4
 
 
 def make_border():  # создаем стены по краям
@@ -127,7 +141,6 @@ def draw(screen, walls, food, snake, font, score, level, over_rect=None, game_ov
         screen.blit(font.render("Play Again", True, WHITE), over_rect.move(40, 10))  # текст кнопки
 
 
-
 def main():
     pygame.init()  # запуск pygame
     screen = pygame.display.set_mode((WIDTH, HEIGHT))  # окно игры
@@ -152,7 +165,6 @@ def main():
     btn_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2, 200, 50)  # кнопка игры заново
     dir_buf = snake.dir  # буфер направления
 
-    # --- игровой цикл ---
     while True:  # главный цикл
         for e in pygame.event.get():  # перебираем события
             if e.type == pygame.QUIT:  # выход из игры
@@ -196,19 +208,25 @@ def main():
                 snake.set_dir(dir_buf)  # задаем направление
                 snake.step()  # двигаем змею
 
+                #уменьшение таймера еды
+                food.timer -= 1
+                if food.timer <= 0:
+                    food.respawn(snake.body, walls)
+
                 hx, hy = snake.head()  # голова змеи
 
                 if (hx, hy) in walls or not (0 <= hx < GRID_W and 0 <= hy < GRID_H) or snake.hits_self():
                     # проверка столкновения со стеной, границами или собой
                     state = GAME_OVER  # конец игры
-                elif (hx, hy) == food.pos:  # если съели еду
-                    if food.is_gold:  # если золотая еда
-                        score += 30  # добавляем больше очков
-                        snake.grow += 3  # растем быстрее
-                    else:
-                        score += 10  # обычные очки
-                        snake.grow += 1  # растем
 
+                elif (hx, hy) == food.pos:  # если съели еду
+                    #очки зависят от веса еды
+                    if food.is_gold:
+                        score += random.randint(30, 50)
+                    else:
+                        score += random.randint(10, 20)
+
+                    snake.grow += food.value  # рост зависит от веса еды
                     food.respawn(snake.body, walls)  # новая еда
 
                     new_level = score // LEVEL_EVERY + 1  # вычисляем уровень

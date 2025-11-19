@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>sɵre – Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --sore-blue: #1355cc;
+      --bg-light: #f5f6fa;
+      --border: #d5d8e0;
+      --error: #e53935;
+      --text-main: #1f2430;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #fdfdfd, #eef2ff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      color: var(--text-main);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(15, 35, 95, 0.18);
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      max-width: 1040px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    @media (max-width: 800px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+      .card-visual {
+        display: none;
+      }
+    }
+
+    .card-main {
+      padding: 32px 40px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 10px;
+    }
+
+    .logo-text {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--sore-blue);
+      letter-spacing: 0.02em;
+    }
+
+    .logo-bar {
+      width: 64px;
+      height: 8px;
+      border-radius: 999px;
+      border: 3px solid var(--sore-blue);
+    }
+
+    .tabs {
+      display: inline-flex;
+      background: var(--bg-light);
+      border-radius: 999px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #6b7280;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      color: var(--sore-blue);
+      box-shadow: 0 4px 14px rgba(19, 85, 204, 0.25);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      outline: none;
+      transition: 0.15s;
+      background: #ffffff;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--sore-blue);
+      box-shadow: 0 0 0 2px rgba(19, 85, 204, 0.16);
+    }
+
+    .field-error input,
+    .field-error select {
+      border-color: var(--error);
+    }
+
+    .error-text {
+      font-size: 12px;
+      color: var(--error);
+      min-height: 16px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .row a {
+      color: var(--sore-blue);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .checkbox input {
+      width: 14px;
+      height: 14px;
+      padding: 0;
+    }
+
+    .btn-primary {
+      margin-top: 6px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: none;
+      background: var(--sore-blue);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .btn-primary:disabled {
+      background: #9fb4ec;
+      cursor: default;
+    }
+
+    .btn-primary:not(:disabled):hover {
+      filter: brightness(1.07);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(19, 85, 204, 0.35);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 14px 0;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-social {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 12px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    .muted {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .muted span {
+      color: var(--sore-blue);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #059669;
+      color: white;
+      font-size: 13px;
+      box-shadow: 0 10px 20px rgba(4, 120, 87, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: 0.2s;
+    }
+
+    .toast.error {
+      background: var(--error);
+      box-shadow: 0 10px 20px rgba(229, 57, 53, 0.35);
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .card-visual {
+      background: radial-gradient(circle at top, #cedcff, #15346b);
+      color: white;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.35);
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .visual-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 18px 0 10px;
+    }
+
+    .visual-text {
+      font-size: 13px;
+      opacity: 0.85;
+      max-width: 280px;
+    }
+
+    .visual-list {
+      margin-top: 24px;
+      font-size: 13px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .visual-list span {
+      opacity: 0.9;
+    }
+
+    .visual-list strong {
+      display: inline-block;
+      min-width: 18px;
+    }
+
+    .visual-footer {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <main class="card-main">
+      <div class="logo">
+        <div class="logo-text">sɵre</div>
+        <div class="logo-bar"></div>
+      </div>
+
+      <div class="tabs">
+        <button id="tab-login" class="tab-btn active">Sign In</button>
+        <button id="tab-register" class="tab-btn">Create Account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <section id="login-section">
+        <h1>Welcome back to sɵre</h1>
+        <p class="subtitle">Sign in to your library, clubs and book exchanges.</p>
+
+        <form id="login-form">
+          <div class="field" data-field="login-email">
+            <label for="login-email-input">Email</label>
+            <input id="login-email-input" type="email" placeholder="you@example.com" required />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field" data-field="login-password">
+            <label for="login-password-input">Password</label>
+            <input id="login-password-input" type="password" placeholder="••••••••" required minlength="6" />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="row">
+            <label class="checkbox">
+              <input type="checkbox" id="remember-me" />
+              Remember me
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary" id="login-submit">Sign In</button>
+
+          <div class="divider">or continue with</div>
+
+          <div class="social-row">
+            <button type="button" class="btn-social">Google</button>
+            <button type="button" class="btn-social">Apple</button>
+            <button type="button" class="btn-social">Facebook</button>
+          </div>
+
+          <p class="muted">
+            New to sɵre?
+            <span id="go-register">Create account</span>
+          </p>
+        </form>
+      </section>
+
+      <!-- REGISTER FORM -->
+      <section id="register-section" style="display: none;">
+        <h1>Create your sɵre account</h1>
+        <p class="subtitle">Join a community of readers, writers and book hunters.</p>
+
+        <form id="register-form">
+          <div class="field" data-field="reg-name">
+            <label for="reg-name-input">Full Name</label>
+            <input id="reg-name-input" type="text" placeholder="Jane Bookworm" required />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field" data-field="reg-email">
+            <label for="reg-email-input">Email</label>
+            <input id="reg-email-input" type="email" placeholder="you@example.com" required />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field" data-field="reg-role">
+            <label for="reg-role-select">Role</label>
+            <select id="reg-role-select">
+              <option value="user">User – read, buy, exchange books</option>
+              <option value="admin">Admin – manage publishers & system</option>
+            </select>
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field" data-field="reg-password">
+            <label for="reg-password-input">Password</label>
+            <input id="reg-password-input" type="password" placeholder="At least 8 characters" required minlength="8" />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field" data-field="reg-password2">
+            <label for="reg-password2-input">Confirm Password</label>
+            <input id="reg-password2-input" type="password" placeholder="Repeat password" required minlength="8" />
+            <div class="error-text"></div>
+          </div>
+
+          <div class="field">
+            <label>Favorite genres</label>
+            <small style="font-size: 11px; color:#6b7280;">Not required, but helps recommendations.</small>
+            <input id="reg-genres-input" type="text" placeholder="e.g. fantasy, sci-fi, history" />
+          </div>
+
+          <label class="checkbox" style="margin-top: 4px;">
+            <input type="checkbox" id="reg-terms" />
+            I accept Terms & Privacy Policy
+          </label>
+
+          <button type="submit" class="btn-primary" id="register-submit" disabled>Create Account</button>
+
+          <p class="muted">
+            Already have an account?
+            <span id="go-login">Sign in</span>
+          </p>
+        </form>
+      </section>
+    </main>
+
+    <aside class="card-visual">
+      <div>
+        <div class="pill">
+          <span>📚</span>
+          <span>Buy · Read · Share</span>
+        </div>
+        <h2 class="visual-title">A home for your bookshelves.</h2>
+        <p class="visual-text">
+          sɵre is a marketplace and community: buy new and used books, exchange with friends, join clubs and track your reading levels.
+        </p>
+
+        <div class="visual-list">
+          <span><strong>1.</strong> New & used books, bookcrossing</span>
+          <span><strong>2.</strong> Reader levels: Beginner → Bibliophile → Bookworm</span>
+          <span><strong>3.</strong> Clubs, friends & shared reading stats</span>
+        </div>
+      </div>
+
+      <div class="visual-footer">
+        All account data is stored securely in our database: users, profiles, books, cards and reading stats.
+      </div>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // === SIMPLE FRONTEND LOGIC ===
+    const tabLogin = document.getElementById("tab-login");
+    const tabRegister = document.getElementById("tab-register");
+    const loginSection = document.getElementById("login-section");
+    const registerSection = document.getElementById("register-section");
+    const goRegister = document.getElementById("go-register");
+    const goLogin = document.getElementById("go-login");
+    const toastEl = document.getElementById("toast");
+
+    const registerSubmit = document.getElementById("register-submit");
+    const regTerms = document.getElementById("reg-terms");
+
+    // Базовый URL бэкенда (поменяй при необходимости)
+    const API_BASE = "http://localhost:4000";
+
+    function showToast(message, isError = false) {
+      toastEl.textContent = message;
+      toastEl.classList.toggle("error", isError);
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 3000);
+    }
+
+    function switchToLogin() {
+      tabLogin.classList.add("active");
+      tabRegister.classList.remove("active");
+      loginSection.style.display = "";
+      registerSection.style.display = "none";
+    }
+
+    function switchToRegister() {
+      tabRegister.classList.add("active");
+      tabLogin.classList.remove("active");
+      registerSection.style.display = "";
+      loginSection.style.display = "none";
+    }
+
+    tabLogin.onclick = switchToLogin;
+    tabRegister.onclick = switchToRegister;
+    goRegister.onclick = switchToRegister;
+    goLogin.onclick = switchToLogin;
+
+    // Включаем/выключаем кнопку регистрации в зависимости от чекбокса Terms
+    regTerms.addEventListener("change", () => {
+      registerSubmit.disabled = !regTerms.checked;
+    });
+
+    // Утилита для показа ошибок под полем
+    function setFieldError(form, fieldName, msg) {
+      const field = form.querySelector(`[data-field="${fieldName}"]`);
+      if (!field) return;
+      const errEl = field.querySelector(".error-text");
+      if (msg) {
+        field.classList.add("field-error");
+        if (errEl) errEl.textContent = msg;
+      } else {
+        field.classList.remove("field-error");
+        if (errEl) errEl.textContent = "";
+      }
+    }
+
+    // === LOGIN ===
+    const loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setFieldError(loginForm, "login-email", "");
+      setFieldError(loginForm, "login-password", "");
+
+      const email = document.getElementById("login-email-input").value.trim();
+      const password = document.getElementById("login-password-input").value;
+
+      if (!email) {
+        setFieldError(loginForm, "login-email", "Email is required");
+        return;
+      }
+      if (!password) {
+        setFieldError(loginForm, "login-password", "Password is required");
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          const msg = data.message || "Login failed";
+          showToast(msg, true);
+          if (res.status === 401) {
+            setFieldError(loginForm, "login-password", msg);
+          }
+          return;
+        }
+
+        // Сохраняем токен в localStorage
+        if (data.token) {
+          localStorage.setItem("sore_token", data.token);
+        }
+
+        showToast("Signed in successfully");
+        // Здесь перенаправление на главную:
+        // window.location.href = "/home.html";
+      } catch (err) {
+        console.error(err);
+        showToast("Network error. Try again.", true);
+      }
+    });
+
+    // === REGISTER ===
+    const registerForm = document.getElementById("register-form");
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      // очищаем ошибки
+      ["reg-name", "reg-email", "reg-role", "reg-password", "reg-password2"]
+        .forEach(f => setFieldError(registerForm, f, ""));
+
+      const name = document.getElementById("reg-name-input").value.trim();
+      const email = document.getElementById("reg-email-input").value.trim();
+      const role = document.getElementById("reg-role-select").value;
+      const password = document.getElementById("reg-password-input").value;
+      const password2 = document.getElementById("reg-password2-input").value;
+      const genresRaw = document.getElementById("reg-genres-input").value.trim();
+
+      let hasError = false;
+      if (!name) {
+        setFieldError(registerForm, "reg-name", "Name is required");
+        hasError = true;
+      }
+      if (!email) {
+        setFieldError(registerForm, "reg-email", "Email is required");
+        hasError = true;
+      }
+      if (password.length < 8) {
+        setFieldError(registerForm, "reg-password", "Password must be at least 8 characters");
+        hasError = true;
+      }
+      if (password !== password2) {
+        setFieldError(registerForm, "reg-password2", "Passwords do not match");
+        hasError = true;
+      }
+      if (!regTerms.checked) {
+        showToast("You must accept Terms & Privacy Policy", true);
+        hasError = true;
+      }
+      if (hasError) return;
+
+      const genres = genresRaw
+        ? genresRaw.split(",").map(g => g.trim()).filter(Boolean)
+        : [];
+
+      try {
+        const res = await fetch(API_BASE + "/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ full_name: name, email, password, role, genres })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          const msg = data.message || "Registration failed";
+          showToast(msg, true);
+          if (res.status === 409) {
+            setFieldError(registerForm, "reg-email", msg);
+          }
+          return;
+        }
+
+        showToast("Account created! You can sign in now.");
+        switchToLogin();
+      } catch (err) {
+        console.error(err);
+        showToast("Network error during registration.", true);
+      }
+    });
+  </script>
+</body>
+</html>
