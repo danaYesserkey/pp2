@@ -1,0 +1,173 @@
+psql -U postgres
+CREATE DATABASE lab11;
+\c lab11;
+
+
+CREATE TABLE phonebook (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    phone VARCHAR(20) UNIQUE
+);
+
+
+INSERT INTO phonebook (first_name, last_name, phone) VALUES
+('Dana', 'Yesserkey', '3456789'),
+('Adil', 'Yergazy', '234567'),
+('Adina', 'Aman', '2345678'),
+('qqq', 'eee', '1234');
+
+
+
+CREATE OR REPLACE FUNCTION find_phonebook(p_pattern TEXT)
+RETURNS SETOF phonebook
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT *
+    FROM phonebook
+    WHERE first_name ILIKE '%' || p_pattern || '%'
+       OR last_name  ILIKE '%' || p_pattern || '%'
+       OR phone      ILIKE '%' || p_pattern || '%';
+END;
+$$;
+
+
+SELECT * FROM find_phonebook('d');
+
+SELECT * FROM find_phonebook('2');
+
+
+CREATE OR REPLACE PROCEDURE upsert_phonebook_user(
+    p_first_name TEXT,
+    p_last_name  TEXT,
+    p_phone      TEXT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE phonebook
+    SET phone = p_phone
+    WHERE first_name = p_first_name
+      AND last_name  = p_last_name;
+
+    IF NOT FOUND THEN
+        INSERT INTO phonebook(first_name, last_name, phone)
+        VALUES (p_first_name, p_last_name, p_phone);
+    END IF;
+END;
+$$;
+
+
+CALL upsert_phonebook_user('Dana', 'Yesserkey', '999999');
+
+
+
+CREATE TABLE IF NOT EXISTS invalid_phones (
+    first_name TEXT,
+    last_name  TEXT,
+    phone      TEXT
+);
+
+
+
+CREATE OR REPLACE PROCEDURE bulk_insert_users(
+    p_first_names TEXT[],
+    p_last_names  TEXT[],
+    p_phones      TEXT[]
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    i       INT;
+    v_first TEXT;
+    v_last  TEXT;
+    v_phone TEXT;
+BEGIN
+    TRUNCATE TABLE invalid_phones;
+
+    FOR i IN 1 .. array_length(p_first_names, 1) LOOP
+        v_first := p_first_names[i];
+        v_last  := p_last_names[i];
+        v_phone := p_phones[i];
+
+        IF v_phone IS NULL
+           OR v_phone !~ '^[0-9]+$'
+           OR length(v_phone) < 5
+           OR length(v_phone) > 20 THEN
+
+            INSERT INTO invalid_phones(first_name, last_name, phone)
+            VALUES (v_first, v_last, v_phone);
+
+        ELSE
+            INSERT INTO phonebook(first_name, last_name, phone)
+            VALUES (v_first, v_last, v_phone)
+            ON CONFLICT (phone) DO UPDATE
+                SET first_name = EXCLUDED.first_name,
+                    last_name  = EXCLUDED.last_name;
+        END IF;
+    END LOOP;
+END;
+$$;
+
+
+TRUNCATE TABLE invalid_phones;
+
+
+CALL bulk_insert_users(
+    ARRAY['Dana','Arai','user'],
+    ARRAY['Kim','Smail','Oops'],
+    ARRAY['87001112233','123','abc123']
+);
+
+SELECT * FROM phonebook;
+SELECT * FROM invalid_phones;
+
+
+
+
+CREATE OR REPLACE FUNCTION get_phonebook_page(
+    p_limit  INT,
+    p_offset INT
+)
+RETURNS SETOF phonebook
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT *
+    FROM phonebook
+    ORDER BY id
+    LIMIT p_limit
+    OFFSET p_offset;
+END;
+$$;
+
+SELECT * FROM get_phonebook_page(3, 0);
+SELECT * FROM get_phonebook_page(3, 3);
+
+
+
+
+CREATE OR REPLACE PROCEDURE delete_from_phonebook(
+    p_name  TEXT DEFAULT NULL,
+    p_phone TEXT DEFAULT NULL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF p_name IS NOT NULL THEN
+        DELETE FROM phonebook
+        WHERE first_name = p_name
+           OR last_name  = p_name;
+
+    ELSIF p_phone IS NOT NULL THEN
+        DELETE FROM phonebook
+        WHERE phone = p_phone;
+    END IF;
+END;
+$$;
+
+CALL delete_from_phonebook(p_name := 'Dana');
+CALL delete_from_phonebook(p_phone := '3456789');
